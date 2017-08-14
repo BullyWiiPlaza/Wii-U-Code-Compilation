@@ -1,0 +1,11 @@
+# Object files directory
+/build
+
+# CLion project directory
+/cmake-build-debug
+
+code_compilation.elf
+*.id0
+*.id1
+*.nam
+*.til
