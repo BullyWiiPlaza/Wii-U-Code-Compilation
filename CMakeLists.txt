@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(code_handler)
+project(cheat_code_compilation)
 
 set(CMAKE_CXX_STANDARD 11)
 

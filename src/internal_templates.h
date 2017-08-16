@@ -5,14 +5,14 @@
 #include "definitions.h"
 #include "pointer_utilties.h"
 
-inline void stringWriteInternal(const unsigned char *string, unsigned int *address) {
+static inline void stringWriteInternal(const unsigned char *string, unsigned int *address) {
 	unsigned long stringLength = getStringLength((const char *) string);
 	for (unsigned int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
 		writeInternal(address, string[stringIndex], EIGHT_BIT);
 	}
 }
 
-inline void skipWriteInternal(unsigned int *address, unsigned int writesCount, unsigned int offsetBetweenWrites,
+static inline void skipWriteInternal(unsigned int *address, unsigned int writesCount, unsigned int offsetBetweenWrites,
 							  unsigned int valueIncrement, unsigned int value, enum dataType dataType) {
 	for (unsigned int writesIndex = 0; writesIndex < writesCount; writesIndex++) {
 		writeInternal(address, value, dataType);
@@ -22,8 +22,7 @@ inline void skipWriteInternal(unsigned int *address, unsigned int writesCount, u
 	}
 }
 
-// TODO Fix, compiles into only a single memory write?
-inline void fillMemoryInternal(unsigned int *address, unsigned int length,
+static inline void fillMemoryInternal(unsigned int *address, unsigned int length,
 							   unsigned int value, enum dataType dataType) {
 	unsigned int bytesCount = getBytesCount(dataType);
 	unsigned int writesCount = length / bytesCount;
@@ -34,7 +33,7 @@ inline void fillMemoryInternal(unsigned int *address, unsigned int length,
 	}
 }
 
-inline void corrupterInternal(unsigned int *startingAddress, const unsigned int *endingAddress,
+static inline void corrupterInternal(unsigned int *startingAddress, const unsigned int *endingAddress,
 							  unsigned int searchValue, unsigned int searchValueReplacement, enum dataType dataType) {
 	unsigned int bytesCount = getBytesCount(dataType);
 	unsigned int *currentAddress = startingAddress;
@@ -49,7 +48,7 @@ inline void corrupterInternal(unsigned int *startingAddress, const unsigned int 
 	}
 }
 
-inline void writeSearchTemplateInternal(const unsigned char *searchTemplate, unsigned int searchTemplateArraySize,
+static inline void writeSearchTemplateInternal(const unsigned char *searchTemplate, unsigned int searchTemplateArraySize,
 										unsigned int matchCount,
 										unsigned int offset, unsigned char *replacement,
 										unsigned int replacementArraySize,

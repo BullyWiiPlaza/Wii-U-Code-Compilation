@@ -6,7 +6,7 @@ enum dataType {
 	THIRTY_TWO_BIT
 };
 
-inline unsigned int getBytesCount(enum dataType dataType) {
+static inline unsigned int getBytesCount(enum dataType dataType) {
 	switch (dataType) {
 		case EIGHT_BIT:
 			return 1;
@@ -21,7 +21,7 @@ inline unsigned int getBytesCount(enum dataType dataType) {
 	return 0;
 }
 
-inline void writeInternal(unsigned int *address, unsigned int value, enum dataType dataType) {
+static inline void writeInternal(unsigned int *address, unsigned int value, enum dataType dataType) {
 	switch (dataType) {
 		case EIGHT_BIT:
 			*(unsigned char *) address = (unsigned char) value;
@@ -37,7 +37,7 @@ inline void writeInternal(unsigned int *address, unsigned int value, enum dataTy
 	}
 }
 
-inline unsigned int readInternal(const unsigned int *address, enum dataType dataType) {
+static inline unsigned int readInternal(const unsigned int *address, enum dataType dataType) {
 	switch (dataType) {
 		case EIGHT_BIT:
 			return *(unsigned char *) address;
