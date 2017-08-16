@@ -1,23 +1,9 @@
 #pragma once
 
-#include "utilities.h"
+#include "library_functions.h"
 #include "enumerations.h"
-
-inline void writeInternal(unsigned int *address, unsigned int value, enum dataType dataType) {
-	switch (dataType) {
-		case EIGHT_BIT:
-			*(unsigned char *) address = (unsigned char) value;
-			break;
-
-		case SIXTEEN_BIT:
-			*(unsigned short *) address = (unsigned short) value;
-			break;
-
-		case THIRTY_TWO_BIT:
-			*address = value;
-			break;
-	}
-}
+#include "definitions.h"
+#include "pointer_utilties.h"
 
 inline void stringWriteInternal(const unsigned char *string, unsigned int *address) {
 	unsigned long stringLength = getStringLength((const char *) string);
@@ -32,6 +18,59 @@ inline void skipWriteInternal(unsigned int *address, unsigned int writesCount, u
 		writeInternal(address, value, dataType);
 
 		value += valueIncrement;
-		address += offsetBetweenWrites;
+		incrementPointerByAbsolute(&address, offsetBetweenWrites);
+	}
+}
+
+// TODO Fix, compiles into only a single memory write?
+inline void fillMemoryInternal(unsigned int *address, unsigned int length,
+							   unsigned int value, enum dataType dataType) {
+	unsigned int bytesCount = getBytesCount(dataType);
+	unsigned int writesCount = length / bytesCount;
+
+	for (unsigned int offset = 0; offset < writesCount; offset++) {
+		writeInternal(address, value, dataType);
+		incrementPointerByAbsolute(&address, bytesCount);
+	}
+}
+
+inline void corrupterInternal(unsigned int *startingAddress, const unsigned int *endingAddress,
+							  unsigned int searchValue, unsigned int searchValueReplacement, enum dataType dataType) {
+	unsigned int bytesCount = getBytesCount(dataType);
+	unsigned int *currentAddress = startingAddress;
+
+	while (currentAddress < endingAddress) {
+		unsigned int currentValue = readInternal(currentAddress, dataType);
+		if (currentValue == searchValue) {
+			writeInternal(currentAddress, searchValueReplacement, dataType);
+		}
+
+		incrementPointerByAbsolute(&currentAddress, bytesCount);
+	}
+}
+
+inline void writeSearchTemplateInternal(const unsigned char *searchTemplate, unsigned int searchTemplateArraySize,
+										unsigned int matchCount,
+										unsigned int offset, unsigned char *replacement,
+										unsigned int replacementArraySize,
+										unsigned int *startingAddress, const unsigned int *endingAddress) {
+	unsigned int countedMatches = 0;
+	unsigned int *currentAddress = startingAddress;
+
+	while (currentAddress < endingAddress) {
+		int comparisonResult = compareMemory(currentAddress, searchTemplate, searchTemplateArraySize);
+
+		if (comparisonResult == 0) {
+			countedMatches++;
+
+			if (countedMatches == matchCount) {
+				incrementPointerByAbsolute(&currentAddress, offset);
+				copyMemory(replacement, currentAddress, replacementArraySize);
+
+				return;
+			}
+		}
+
+		incrementPointerByAbsolute(&currentAddress, searchTemplateArraySize);
 	}
 }
