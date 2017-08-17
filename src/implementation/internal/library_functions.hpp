@@ -1,7 +1,7 @@
 #pragma once
 
-static inline unsigned long getStringLength(const char *string) {
-	const char *character;
+static inline unsigned long getStringLength(const unsigned char string[]) {
+	const unsigned char *character;
 
 	for (character = string; *character != 0; ++character);
 	return (character - string);
@@ -17,7 +17,7 @@ static inline int compareMemory(const void *first, const void *second, int size)
 	return 0;
 }
 
-static inline void copyMemory(void *source, void *destination, int size) {
+static inline void copyMemory(const unsigned char *source, void *destination, int size) {
 	char *characterPointerSource = (char *) source;
 	char *characterPointerDestination = (char *) destination;
 

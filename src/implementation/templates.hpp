@@ -32,14 +32,14 @@ void ramWrite32Bit() {
 	writeInternal(address, value, THIRTY_TWO_BIT);
 }
 
-// TODO Avoid .rodata, do NOT use this template yet
 __attribute__((noinline))
 void stringWrite() {
 	/* Define the string to write (null-terminated) and the address to write it to */
-	unsigned char string[] = "Wolfgang\0";
+	static const unsigned char string[] = "Wolfgang\0";
 	unsigned int *address = (unsigned int *) 0x10647CFC;
 
-	stringWriteInternal(string, address);
+	unsigned long length = sizeof(string);
+	stringWriteInternal(address, string, length);
 }
 
 __attribute__((noinline))
@@ -86,10 +86,10 @@ void searchTemplate() {
 	/*	Define the byte search template to be found in the memory, the match count for selecting any of
 	 	the matches, the offset between the match and the actual write, the replacement bytes to write,
 	 	the starting address in the memory and the ending address for the search */
-	unsigned char searchTemplate[] = {0x00, 0x00};
+	static const unsigned char searchTemplate[] = {0x00, 0x00, 0x34, 0x67, 0x89, 0x10, 0x30};
 	unsigned int matchCount = 2;
 	unsigned int offset = 0x8;
-	unsigned char replacement[] = {0x11, 0x12};
+	static const unsigned char replacement[] = {0x11, 0x12};
 	unsigned int *startingAddress = (unsigned int *) 0x10647CFC;
 	unsigned int *endingAddress = (unsigned int *) 0x10650000;
 
@@ -99,16 +99,15 @@ void searchTemplate() {
 								replacementArraySize, startingAddress, endingAddress);
 }
 
-// TODO Avoid .rodata, do NOT use this template yet
 __attribute__((noinline))
 void writePointer() {
 	/*	Define the pointer's base address, the starting and ending memory ranges for each
 	 	offset iteration, the offsets themselves, the value to be written and the data type
 	 	of the value */
 	unsigned int *baseAddress = (unsigned int *) 0x10000000;
-	unsigned int startingMemoryRanges[] = {0x1000000, 0x1300000, 0x1200000};
-	unsigned int endingMemoryRanges[] = {0x2000000, 0x2100000, 0x2200000};
-	int offsets[] = {0x30, 0x50, -0x70};
+	static const unsigned int startingMemoryRanges[] = {0x1000000, 0x1300000, 0x1200000};
+	static const unsigned int endingMemoryRanges[] = {0x2000000, 0x2100000, 0x2200000};
+	static const int offsets[] = {0x30, 0x50, -0x70};
 	unsigned int value = 0x13371337;
 	enum dataType dataType = THIRTY_TWO_BIT;
 

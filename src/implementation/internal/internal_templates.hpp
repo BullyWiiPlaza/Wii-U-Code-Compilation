@@ -5,20 +5,21 @@
 #include "definitions.hpp"
 #include "pointer_utilties.hpp"
 
-static inline void stringWriteInternal(const unsigned char *string, unsigned int *address) {
-	unsigned long stringLength = getStringLength((const char *) string);
+static inline void stringWriteInternal(unsigned int *address,
+									   const unsigned char *string,
+									   unsigned long length) {
 	unsigned int stringIndex = 0;
 	enum dataType dataType = EIGHT_BIT;
 	unsigned int incrementPerIteration = 1;
 
-	for (; stringIndex < stringLength; stringIndex += incrementPerIteration) {
+	for (; stringIndex < length; stringIndex += incrementPerIteration) {
 		writeInternal(address, string[stringIndex], dataType);
 		incrementPointerByAbsolute(&address, incrementPerIteration);
 	}
 }
 
 static inline void skipWriteInternal(unsigned int *address, unsigned int writesCount, unsigned int offsetBetweenWrites,
-							  unsigned int valueIncrement, unsigned int value, enum dataType dataType) {
+									 unsigned int valueIncrement, unsigned int value, enum dataType dataType) {
 	for (unsigned int writesIndex = 0; writesIndex < writesCount; writesIndex++) {
 		writeInternal(address, value, dataType);
 
@@ -28,7 +29,7 @@ static inline void skipWriteInternal(unsigned int *address, unsigned int writesC
 }
 
 static inline void fillMemoryInternal(unsigned int *address, unsigned int length,
-							   unsigned int value, enum dataType dataType) {
+									  unsigned int value, enum dataType dataType) {
 	unsigned int bytesCount = getBytesCount(dataType);
 	unsigned int writesCount = length / bytesCount;
 
@@ -39,7 +40,8 @@ static inline void fillMemoryInternal(unsigned int *address, unsigned int length
 }
 
 static inline void corrupterInternal(unsigned int *startingAddress, const unsigned int *endingAddress,
-							  unsigned int searchValue, unsigned int searchValueReplacement, enum dataType dataType) {
+									 unsigned int searchValue, unsigned int searchValueReplacement,
+									 enum dataType dataType) {
 	unsigned int bytesCount = getBytesCount(dataType);
 	unsigned int *currentAddress = startingAddress;
 
@@ -53,11 +55,15 @@ static inline void corrupterInternal(unsigned int *startingAddress, const unsign
 	}
 }
 
-static inline void writeSearchTemplateInternal(const unsigned char *searchTemplate, unsigned int searchTemplateArraySize,
-										unsigned int matchCount,
-										unsigned int offset, unsigned char *replacement,
-										unsigned int replacementArraySize,
-										unsigned int *startingAddress, const unsigned int *endingAddress) {
+static inline void
+writeSearchTemplateInternal(const unsigned char *searchTemplate,
+							unsigned int searchTemplateArraySize,
+							unsigned int matchCount,
+							unsigned int offset,
+							const unsigned char *replacement,
+							unsigned int replacementArraySize,
+							unsigned int *startingAddress,
+							const unsigned int *endingAddress) {
 	unsigned int countedMatches = 0;
 	unsigned int *currentAddress = startingAddress;
 
