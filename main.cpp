@@ -1,12 +1,13 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "src/templates.h"
+#include <cstdlib>
+#include <cstdio>
+#include "src/implementation/templates.hpp"
+#include "src/implementation/examples/mario_kart_8.hpp"
 
 #define TABS "\t\t\t"
 
 void testFillMemory32() {
 	unsigned int length = 0xC;
-	unsigned int *address = malloc(length);
+	auto *address = (unsigned int *) malloc(length);
 	unsigned int value = 0x13371337;
 	enum dataType dataType = THIRTY_TWO_BIT;
 	fillMemoryInternal(address, length, value, dataType);
@@ -27,7 +28,7 @@ void testFillMemory32() {
 
 void testFillMemory8() {
 	unsigned int length = 0xC;
-	unsigned int *address = malloc(length);
+	auto *address = (unsigned int *) malloc(length);
 	unsigned int value = 0x37;
 	enum dataType dataType = EIGHT_BIT;
 	fillMemoryInternal(address, length, value, dataType);
@@ -56,6 +57,9 @@ void testWriteSearchTemplate() {
 }
 
 int main() {
+	randomVR();
+	exit(EXIT_SUCCESS);
+
 	testFillMemory();
 	testWriteSearchTemplate();
 

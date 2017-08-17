@@ -1,14 +1,19 @@
 #pragma once
 
-#include "library_functions.h"
-#include "enumerations.h"
-#include "definitions.h"
-#include "pointer_utilties.h"
+#include "library_functions.hpp"
+#include "enumerations.hpp"
+#include "definitions.hpp"
+#include "pointer_utilties.hpp"
 
 static inline void stringWriteInternal(const unsigned char *string, unsigned int *address) {
 	unsigned long stringLength = getStringLength((const char *) string);
-	for (unsigned int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
-		writeInternal(address, string[stringIndex], EIGHT_BIT);
+	unsigned int stringIndex = 0;
+	enum dataType dataType = EIGHT_BIT;
+	unsigned int incrementPerIteration = 1;
+
+	for (; stringIndex < stringLength; stringIndex += incrementPerIteration) {
+		writeInternal(address, string[stringIndex], dataType);
+		incrementPointerByAbsolute(&address, incrementPerIteration);
 	}
 }
 
@@ -72,4 +77,28 @@ static inline void writeSearchTemplateInternal(const unsigned char *searchTempla
 
 		incrementPointerByAbsolute(&currentAddress, searchTemplateArraySize);
 	}
+}
+
+void writePointerInternal(unsigned int *baseAddress, const unsigned int *startingMemoryRanges,
+						  const unsigned int *endingMemoryRanges, const int *offsets,
+						  int offsetsCount, unsigned int value, enum dataType dataType) {
+	unsigned int *currentAddress = baseAddress;
+
+	for (int offsetsIndex = 0; offsetsIndex < offsetsCount; offsetsIndex++) {
+		// Read pointer value and add the offset
+		unsigned int *baseAddressValue = (unsigned int *) *currentAddress;
+		baseAddressValue += offsets[offsetsIndex];
+
+		// Validate memory ranges
+		if (baseAddressValue < (unsigned int *) startingMemoryRanges[offsetsIndex] ||
+			baseAddressValue > (unsigned int *) endingMemoryRanges[offsetsIndex]) {
+			goto POINTER_FOLLOWING_FAILED;
+		}
+
+		currentAddress = baseAddressValue;
+	}
+
+	writeInternal(currentAddress, value, dataType);
+
+	POINTER_FOLLOWING_FAILED:;
 }

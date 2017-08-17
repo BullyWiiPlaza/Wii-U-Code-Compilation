@@ -31,7 +31,9 @@ export OBJCOPY	:=	$(PREFIX)objcopy
 TARGET		:=	code_compilation
 BUILD		:=	build
 BUILD_DBG	:=	$(TARGET)_dbg
-SOURCES		:=	src
+SOURCES		:=	src \
+                src\implementation \
+                src\implementation\examples
 DATA		:=	
 
 INCLUDES	:=  src
