@@ -85,9 +85,9 @@ writeSearchTemplateInternal(const unsigned char *searchTemplate,
 	}
 }
 
-void writePointerInternal(unsigned int *baseAddress, const unsigned int *startingMemoryRanges,
-						  const unsigned int *endingMemoryRanges, const int *offsets,
-						  int offsetsCount, unsigned int value, enum dataType dataType) {
+static inline void writePointerInternal(unsigned int *baseAddress, const unsigned int *startingMemoryRanges,
+										const unsigned int *endingMemoryRanges, const int *offsets,
+										int offsetsCount, unsigned int value, enum dataType dataType) {
 	unsigned int *currentAddress = baseAddress;
 
 	for (int offsetsIndex = 0; offsetsIndex < offsetsCount; offsetsIndex++) {
@@ -107,4 +107,11 @@ void writePointerInternal(unsigned int *baseAddress, const unsigned int *startin
 	writeInternal(currentAddress, value, dataType);
 
 	POINTER_FOLLOWING_FAILED:;
+}
+
+#define EXECUTE_ASSEMBLY_RETURN_ADDRESS 0x010F6AE0
+
+// This must be the last piece of code to run every time
+static inline void executeAssemblyReturn() {
+	((void (*)()) EXECUTE_ASSEMBLY_RETURN_ADDRESS)();
 }

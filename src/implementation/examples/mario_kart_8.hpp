@@ -1,7 +1,6 @@
 #pragma once
 
-// TODO Choose any address you want (should have value 0 at first)
-#define RANDOM_NUMBER_SEED_ADDRESS 0x12345678
+#define RANDOM_NUMBER_SEED_ADDRESS 0x11000000
 #define VR_ADDRESS 0x2F748660
 
 static unsigned long *randomNumberSeed = (unsigned long *) RANDOM_NUMBER_SEED_ADDRESS;
@@ -38,4 +37,6 @@ void randomVR() {
 	}
 	unsigned int random = (unsigned int) random_number(0, 10000);
 	*(unsigned int *) VR_ADDRESS = random;
+
+	executeAssemblyReturn();
 }

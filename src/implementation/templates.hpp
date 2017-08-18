@@ -12,6 +12,7 @@ void ramWrite8Bit() {
 	unsigned char value = 0x12;
 
 	writeInternal(address, value, EIGHT_BIT);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -21,6 +22,7 @@ void ramWrite16Bit() {
 	unsigned short value = 0x1234;
 
 	writeInternal(address, value, SIXTEEN_BIT);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -30,6 +32,7 @@ void ramWrite32Bit() {
 	unsigned int value = 0x12345678;
 
 	writeInternal(address, value, THIRTY_TWO_BIT);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -40,6 +43,7 @@ void stringWrite() {
 
 	unsigned long length = sizeof(string);
 	stringWriteInternal(address, string, length);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -54,6 +58,7 @@ void skipWrite() {
 	enum dataType dataType = EIGHT_BIT;
 
 	skipWriteInternal(address, writesCount, offsetBetweenWrites, valueIncrement, value, dataType);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -66,6 +71,7 @@ void fillMemory() {
 	enum dataType dataType = THIRTY_TWO_BIT;
 
 	fillMemoryInternal(address, length, value, dataType);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -79,6 +85,7 @@ void corrupter() {
 	enum dataType dataType = THIRTY_TWO_BIT;
 
 	corrupterInternal(startingAddress, endingAddress, searchValue, searchValueReplacement, dataType);
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -97,6 +104,8 @@ void searchTemplate() {
 	unsigned int replacementArraySize = getArraySize(replacement);
 	writeSearchTemplateInternal(searchTemplate, searchTemplateArraySize, matchCount, offset, replacement,
 								replacementArraySize, startingAddress, endingAddress);
+
+	executeAssemblyReturn();
 }
 
 __attribute__((noinline))
@@ -113,4 +122,6 @@ void writePointer() {
 
 	int offsetsCount = getArraySize(offsets);
 	writePointerInternal(baseAddress, startingMemoryRanges, endingMemoryRanges, offsets, offsetsCount, value, dataType);
+
+	executeAssemblyReturn();
 }
